@@ -1,6 +1,7 @@
 import express, {Application} from 'express';
 import userRoutes from '../routes/usuario';
 import cors from 'cors';
+import db from '../db/connection';
 
 class Server {
     private app: Application;
@@ -14,10 +15,21 @@ class Server {
         this.port = process.env.PORT || '8000';
 
         //metodos iniciales
+        this.dbConnection();
         this.middlewares();
         //definir mis rutas
         this.routes();
     }
+
+    async dbConnection(){
+        try {
+            await db.authenticate();
+            console.log(' Database online');
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
 
     middlewares(){
         //funciones que se ejecutan antes de pasar por las rutas
