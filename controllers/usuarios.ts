@@ -1,17 +1,34 @@
 import { Request, Response} from 'express';
+import Usuario from '../models/usuario';
 
-export const getUsuarios = (req: Request, res: Response) =>{
-    res.json({
-        msg: 'getUsuarios'
-    })
+export const getUsuarios = async (req: Request, res: Response) =>{
+    try {
+        const usuarios = await Usuario.findAll();
+
+        res.json(usuarios)
+        
+    } catch (error) {
+        console.log('%cusuarios.ts line:11 error', 'color: #007acc;', error);
+        
+    }
+
+
 }
 
-export const getUsuario = (req: Request, res: Response) =>{
+export const getUsuario = async(req: Request, res: Response) =>{
     const { id } = req.params;
-    res.json({
-        msg: 'getUsuario',
-        id
-    })
+
+    const usuario = await Usuario.findByPk(id);
+
+    if( usuario){
+        res.json(usuario);
+    }else{
+        res.status(404).json({
+            msg : `No existe el usuario con el id ${id}`;
+        });
+    }
+
+    
 }
 
 export const postUsuario = (req: Request, res: Response) =>{
